@@ -6,6 +6,7 @@ const cors = require('cors')
 require('dotenv').config()
 const PORT = process.env.PORT || 3000
 app.use(cors())
+app.get('/weather',weatherController)
 app.get('/location',(req, res)=> {
   const url= `https://maps.googleapis.com/maps/api/geocode/json?address=${req.query.address}&key=${process.env.GOOGLE_API_KEY}`
   //$ 
@@ -16,10 +17,22 @@ app.get('/location',(req, res)=> {
   })
   .catch(err=>res.send(err))
 })
+ const WeatherConstractor = function(weather){
+   this.summary = weather.body.currently.summary
+   this.icon = weather.body.currently.icon
+   this.temp = weather.body.currently.tempreture
+ }
+ function weatherController(req,res){
+  const url =`https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${req.query.lat},${req.query.lng}`
+  superagent.get(url)
+  .then(result=>{
+    const newWeather = new WeatherConstractor(result)
+    res.send(newWeather)
+  })
+ }
 
-// app.get('/weather',(req,res)=>{
-//   const url =`https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${req.query.lat}, ${req.query.lng}`
-// })
+
+
 
 // app.get('/yelp', (req,res)=>{
 //   const URL = `https://api.yelp.com/v3/businesses/search${req.query.Location}&key=${process.env.YELP_API_KEY}`
@@ -27,7 +40,7 @@ app.get('/location',(req, res)=> {
 //   supperagent.get(URL)
 //   .then(result2=>{
 //     res.send(new business(result2))
-////   })
+//   })
 // })
   app.get('/', (req,res)=>{
   res.send('<h1>This is the Correct route</h1>')
