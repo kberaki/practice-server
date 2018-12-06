@@ -15,6 +15,19 @@ app.get('/location',(req, res)=> {
   })
   .catch(err=>res.send(err))
 })
+
+// app.get('/weather',(req,res)=>{
+//   const url =`https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${req.query.lat}, ${req.query.lng}`
+// })
+
+// app.get('/yelp', (req,res)=>{
+//   const URL = `https://api.yelp.com/v3/businesses/search${req.query.Location}&key=${process.env.YELP_API_KEY}`
+//   console.log(req.query)
+//   supperagent.get(URL)
+//   .then(result2=>{
+//     res.send(new business(result2))
+//   })
+// })
   app.get('/', (req,res)=>{
   res.send('<h1>This is the Correct route</h1>')
 })
@@ -30,6 +43,9 @@ const Location = function(loc){
   .geometry.location.lng
 }
 
+// const business = function(biz){
+//   this.title = biz.body,businesses[0].categories.title
+// }
 
 
 
@@ -39,6 +55,33 @@ const Location = function(loc){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+// app.use('*', (req,res) => {
+//   res.send('something Broke')
+// })
+
+
+
+
+// app.get('/yelp', (req,res)=>{
+//   const URL = `https://api.yelp.com/v3/businesses/search${process.env.YELP_API_KEY}/$req.query.lat},${req.query.lng}`
+//   console.log(req.query)
+//   supperagent.get(URL)
+//   .then(result2=>{
+//     res.send(new business(result2))
+//   })
+// })
+  
 
 
 
