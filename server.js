@@ -27,7 +27,7 @@ app.get('/location',(req, res)=> {
 //   supperagent.get(URL)
 //   .then(result2=>{
 //     res.send(new business(result2))
-//   })
+////   })
 // })
   app.get('/', (req,res)=>{
   res.send('<h1>This is the Correct route</h1>')
