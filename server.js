@@ -21,14 +21,38 @@ app.use(cors())
 app.get('/weather', weatherController)
 app.get('/location',(req, res)=> {
   const url= `https://maps.googleapis.com/maps/api/geocode/json?address=${req.query.address}&key=${process.env.GOOGLE_API_KEY}`
+  
+  Area.findOne({address:req.query.address}, (err,addr)=>{
+   if(addr){
+     console.log('address found')
+     res.send(addr)
+
+   } else{
+
+   
   //$ 
   console.log(req.query)
   superagent.get(url)
   .then(result=>{
-    res.send(new Location(result)) 
+    const newArea = new Area({
+
+      //const Location = function(loc){
+        address:req.query.address,
+        lat: result.body.results[0]
+        .geometry.location.lat,
+        lng: result.body.results[0]
+        .geometry.location.lng
+    })
+    newArea.save()
+    console.log('created new address')
+    res.send( newArea) 
+
   })
+}
+})
   .catch(err=>res.send(err))
 })
+
  const WeatherConstractor = function(weather){
    this.summary = weather.body.currently.summary
    this.icon = weather.body.currently.icon
@@ -76,19 +100,12 @@ app.get('*', (req, res) =>
 app.listen(PORT, ()=>{
   console.log(`Listening on port ${PORT}`)
 })
-const Location = function(loc){
-  this.lat = loc.body.results[0]
-  .geometry.location.lat
-  this.log = loc.body.results[0]
-  .geometry.location.lng
-}
-
 const LocationSchema = new Schema({
   address:String,
   lat: Number,
   lng: Number
 })
-const Location = model('Location', LocationSchema)
+const  Area = model('Area', LocationSchema)
 
 // const business = function(biz){
 //   this.title = biz.body,businesses[0].categories.title
