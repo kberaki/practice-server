@@ -17,7 +17,7 @@ db.once('open', ()=>{
 
 const PORT = process.env.PORT || 3000
 app.use(cors())
-//app.get('/yelp', yelpController)
+app.get('/yelp', yelpController)
 app.get('/weather', weatherController)
 app.get('/location',(req, res)=> {
   const url= `https://maps.googleapis.com/maps/api/geocode/json?address=${req.query.address}&key=${process.env.GOOGLE_API_KEY}`
@@ -66,20 +66,27 @@ app.get('/location',(req, res)=> {
     res.send(newWeather)
   })
  }
-//  const yelpConstractor = function(weather){
-//   this.summary = weather.body.currently.summary
-//   this.icon = weather.body.currently.icon
-//   this.temp = weather.body.currently.temperature
-// }
-// function yelpController(req,res){
-//  const url =`https://api.yelp.com/v3/businesses/{id}/${process.env.YELP_API_KEY}/${req.query.lat},${req.query.lng}`
-//  superagent.get(url)
-//  .then(result=>{
-//    const newWeather = new yelpConstractor(result)
-//    res.send(newWeather)
-//  })
-// }
-//   //function yelpController(req,res){}
+
+ const yelpConstractor = function(yelpp){
+   
+  this.name = yelpp.body.businesses[0].name
+  this.rating = yelpp.body.businesses[0].rating
+  this.city = yelpp.body.businesses[0].location.city
+  this.address1 = yelpp.body.businesses[0].location.address1
+   
+}
+
+ function yelpController(req,res){
+ const url =`https://api.yelp.com/v3/businesses/search?latitude=${req.query.latitude}&longitude=${req.query.longitude}`
+ 
+ superagent.get(url).set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
+ .then(result=>{
+   const newYelp = new yelpConstractor(result)
+   
+   res.send(newYelp)
+ })
+}
+//function yelpController(req,res){}
 
 
 
